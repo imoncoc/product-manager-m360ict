@@ -49,9 +49,11 @@ const MainLayout = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0 }} />
-        <Content style={{ margin: "24px 16px 0" }}>
-          <Outlet />
-        </Content>
+        <div>
+          <Content style={{ margin: "24px 16px 0" }}>
+            <Outlet />
+          </Content>
+        </div>
         <Footer style={{ textAlign: "center" }}>
           Product Management ©{new Date().getFullYear()} Created by Md Imon
           Hossian
