@@ -33,6 +33,7 @@ const ProductDetailTabs = (data: TProducts) => {
   const [reviewArray, setReviewArray] = useState<TReviews[]>(reviews);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [size, _setSize] = useState<SizeType>("middle");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const items = [
     { label: "Specification", key: "1" },
@@ -57,8 +58,6 @@ const ProductDetailTabs = (data: TProducts) => {
     console.log(e);
     message.error("Click on No");
   };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -172,14 +171,18 @@ const ProductDetailTabs = (data: TProducts) => {
                 {/* <Button type="primary">Add a Review</Button>
                  */}
                 <div>
-                  <Button type="primary" onClick={showModal} size="large">
-                    Add a new Review
-                  </Button>
+                  <div className="flex justify-end">
+                    <Button type="primary" onClick={showModal} size="large">
+                      Add a new Review
+                    </Button>
+                  </div>
                   <Modal
                     title="Add a new review"
                     open={isModalOpen}
                     onOk={handleOk}
+                    okText="Confirm"
                     onCancel={handleCancel}
+                    style={{}}
                   >
                     <Form
                       name="basic"

@@ -109,11 +109,11 @@ const ProductDetails = () => {
             {title}
           </h2>
           <div className="flex gap-3 text-lg">
-            <p className="text-[#1677ff] font-medium">Price: </p>
-            <p className="line-through  text-slate-400">${price}</p>
+            <p className="text-slate-500 font-base">Price: </p>
             <p className="text-2xl text-[#1677ff]">
               ${calculateDiscountedPrice(price, discountPercentage)}
             </p>
+            <p className="line-through  text-slate-400">${price}</p>
           </div>
           <p className="">
             <span className="text-slate-500 text-base mr-1">Category:</span>
