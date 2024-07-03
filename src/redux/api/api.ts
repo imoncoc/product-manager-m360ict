@@ -10,11 +10,11 @@ export const baseApi = createApi({
         const params = new URLSearchParams();
         if (options.limit) {
           params.append("limit", options.limit);
-          console.log("limit: ", options.limit);
+          // console.log("limit: ", options.limit);
         }
         if (options.skip) {
           params.append("skip", options.skip);
-          console.log("skip: ", options.skip);
+          // console.log("skip: ", options.skip);
         }
 
         return {

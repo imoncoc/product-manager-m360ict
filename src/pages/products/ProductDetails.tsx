@@ -11,7 +11,6 @@ import {
   Modal,
   Input,
   Select,
-  Space,
   Form,
   message,
   Tag,
@@ -29,16 +28,12 @@ const layout = {
   wrapperCol: { span: 16 },
 };
 
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
-
 const ProductDetails = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetProductDetailsQuery(id);
   const { data: categoriesData } = useGetProductCategoriesQuery(null);
-  const [updateProduct, { data: successData }] = useUpdateProductMutation();
-  console.log("Final output: ", successData);
+  const [updateProduct, { data: successData, isSuccess: isUpdateSuccess }] =
+    useUpdateProductMutation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -69,14 +64,21 @@ const ProductDetails = () => {
   };
 
   const handleOk = () => {
-    setIsModalOpen(false);
+    form
+      .validateFields()
+      .then((values) => {
+        onFinish(values);
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+      });
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = (values: TProductUpdate) => {
+  const onFinish = async (values: TProductUpdate) => {
     const options = {
       id,
       data: values,
@@ -84,8 +86,13 @@ const ProductDetails = () => {
 
     updateProduct(options);
     message.success("Successfully Updated");
+
     setIsModalOpen(false);
   };
+
+  if (isUpdateSuccess) {
+    console.log({ successData, isUpdateSuccess });
+  }
 
   return (
     <>
@@ -95,10 +102,11 @@ const ProductDetails = () => {
             <Image src={thumbnail} style={{ width: "100%", height: "auto" }} />
           </div>
           <div className="grid grid-cols-6 gap-2 p-2">
-            {images.map((img) => (
+            {images.map((img, ind) => (
               <Image
                 className="border"
                 src={img}
+                key={ind}
                 style={{ width: "100px", height: "120px" }}
               />
             ))}
@@ -128,7 +136,6 @@ const ProductDetails = () => {
           <p>
             <Rate allowHalf defaultValue={rating} />
           </p>
-          {/* <Button>Update Product</Button> */}
 
           <div>
             <Button type="primary" onClick={showModal}>
@@ -138,7 +145,9 @@ const ProductDetails = () => {
               title="Update Product"
               open={isModalOpen}
               onOk={handleOk}
+              okText="Update"
               onCancel={handleCancel}
+              className="centered-modal-title"
             >
               <Form
                 {...layout}
@@ -222,41 +231,14 @@ const ProductDetails = () => {
                 >
                   <Select
                     placeholder="Select a option and change input text above"
-                    // onChange={onGenderChange}
                     allowClear
                   >
-                    {/* <Option value="male">male</Option>
-                    <Option value="female">female</Option>
-                    <Option value="other">other</Option> */}
-                    {categoriesData?.map((item: TCategory) => (
-                      <Option value={item.slug}>{item.name}</Option>
+                    {categoriesData?.map((item: TCategory, ind: number) => (
+                      <Option key={ind} value={item.slug}>
+                        {item.name}
+                      </Option>
                     ))}
                   </Select>
-                </Form.Item>
-                <Form.Item
-                  noStyle
-                  shouldUpdate={(prevValues, currentValues) =>
-                    prevValues.gender !== currentValues.gender
-                  }
-                >
-                  {({ getFieldValue }) =>
-                    getFieldValue("gender") === "other" ? (
-                      <Form.Item
-                        name="customizeGender"
-                        label="Customize Gender"
-                        rules={[{ required: true }]}
-                      >
-                        <Input />
-                      </Form.Item>
-                    ) : null
-                  }
-                </Form.Item>
-                <Form.Item {...tailLayout}>
-                  <Space>
-                    <Button type="primary" htmlType="submit">
-                      Submit
-                    </Button>
-                  </Space>
                 </Form.Item>
               </Form>
             </Modal>
