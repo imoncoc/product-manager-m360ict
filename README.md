@@ -1,30 +1,49 @@
-# React + TypeScript + Vite
+# Assignment 3
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A react project using rtk query, tailwindcss, ant design
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js v14.x or later
+- npm v6.x or later / yarn v1.x or later
+- React 18.3.3
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. **Clone the Repository**
 
-- Configure the top-level `parserOptions` property like this:
+   ```bash
+   git clone https://github.com/imoncoc/product-manager-m360ict.git
+   cd project-manager-m360ict
+   ```
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+2. **Install Dependencies**
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+   ``
+   npm install
+
+   ```
+
+   ```
+
+3. **Set Up Environment Variables**
+   Create a `.env` file in the root directory:
+
+4. **Compile TypeScript**
+
+   ```bash
+   npm run build
+   ```
+
+5. **Run the Project**
+   ```bash
+   npm run dev
+   ```
+
+The application will run on `http://localhost:5173`.
+
+- **Objective**: Developing the frontend for an e-commerce platform using React, Ant Design, Tailwind CSS, and React Query. This assignment focuses on implementing the following key functionalities: displaying products with pagination, showing product details, updating product details, adding, updating, and deleting product reviews, and implementing a like feature for reviews.
+
+### Set up Netlify live link
+
+- **Endpoint**: **`https://product-manager-m360ict.netlify.app/`**
