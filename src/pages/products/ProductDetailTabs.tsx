@@ -31,7 +31,8 @@ const ProductDetailTabs = (data: TProducts) => {
     rating,
   } = data;
   const [reviewArray, setReviewArray] = useState<TReviews[]>(reviews);
-  const [size, setSize] = useState<SizeType>("middle");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [size, _setSize] = useState<SizeType>("middle");
 
   const items = [
     { label: "Specification", key: "1" },

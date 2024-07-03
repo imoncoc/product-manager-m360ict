@@ -42,8 +42,6 @@ const ProductTable = () => {
     skip,
   });
 
-  console.log({ limit, skip });
-
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -64,7 +62,8 @@ const ProductTable = () => {
   }, [data]);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    const newSkip = ((pagination.current as number) - 1) * pagination.pageSize;
+    const newSkip =
+      ((pagination.current as number) - 1) * (pagination.pageSize as number);
     setSkip(newSkip);
     setLimit(pagination.pageSize as number);
 
