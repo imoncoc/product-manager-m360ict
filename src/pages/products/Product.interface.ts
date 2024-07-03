@@ -51,18 +51,20 @@ export type TProductUpdate = {
   stock: number;
   rating: number;
   description: string;
-  brand: string;
+  brand?: string;
   category: string;
 };
 
 export type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
-
   comment: string;
   date?: string;
   rating: number;
   reviewerEmail: string;
   reviewerName: string;
+};
+
+export type TCategory = {
+  slug: string;
+  name: string;
+  url: string;
 };

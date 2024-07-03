@@ -8,3 +8,11 @@ export const formatDate = (dateString: string) => {
   };
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
+
+export const calculateDiscountedPrice = (
+  price: number,
+  discountPercentage: number
+) => {
+  const discountedPrice = price - (price * discountPercentage) / 100;
+  return discountedPrice.toFixed(2);
+};

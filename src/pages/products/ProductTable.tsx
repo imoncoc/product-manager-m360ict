@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGetProductsQuery } from "../../redux/api/api";
 
 import { Button, Table, Tag } from "antd";
 import type { TableColumnsType } from "antd";
 import { StarFilled } from "@ant-design/icons";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import type { SorterResult } from "antd/es/table/interface";
+import type { GetProp, TableProps } from "antd";
 
 interface DataType {
   id: string;
@@ -17,26 +19,63 @@ interface DataType {
   rating: number;
 }
 
-// const data: DataType[] = [];
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     key: i,
-//     name: `Edward King ${i}`,
-//     age: 32,
-//     address: `London, Park Lane no. ${i}`,
-//   });
-// }
+type TablePaginationConfig = Exclude<
+  GetProp<TableProps, "pagination">,
+  boolean
+>;
 
-// const handleViewDetails = (record: DataType) => {
-//   // Implement your view details logic here
-//   handleNavigate(record.id);
-//   console.log("View details for:", record.id);
-//   return <NavLink to={`product/${record.id}`}></NavLink>;
-// };
+interface TableParams {
+  pagination?: TablePaginationConfig;
+  sortField?: SorterResult<any>["field"];
+  sortOrder?: SorterResult<any>["order"];
+  filters?: Parameters<GetProp<TableProps, "onChange">>[1];
+}
 
 const ProductTable = () => {
+  const [limit, setLimit] = useState(10); // Items per page
+  const [skip, setSkip] = useState(0); // Offset for items
+
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useGetProductsQuery();
+  const { data, isLoading, isError } = useGetProductsQuery({
+    limit,
+    skip,
+  });
+
+  console.log({ limit, skip });
+
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: limit,
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      setTableParams((prev) => ({
+        ...prev,
+        pagination: {
+          ...prev.pagination,
+          total: data.total, // Assuming your API returns the total number of items
+        },
+      }));
+    }
+  }, [data]);
+
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    const newSkip = (pagination.current - 1) * pagination.pageSize;
+    setSkip(newSkip);
+    setLimit(pagination.pageSize);
+
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+      },
+    }));
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -47,7 +86,6 @@ const ProductTable = () => {
   }
 
   const handleViewDetails = (record: DataType) => {
-    // Navigate to the product details page
     navigate(`/product/${record.id}`);
   };
 
@@ -69,7 +107,6 @@ const ProductTable = () => {
       dataIndex: "title",
       width: 220,
     },
-
     {
       title: "Category",
       dataIndex: "category",
@@ -115,15 +152,18 @@ const ProductTable = () => {
     ...product,
     key: product.id, // Assigning key to each row
   }));
-  console.log("products", data);
+
   return (
     <div>
       <Table
         columns={columns}
         dataSource={dataSource}
-        pagination={{ pageSize: 50 }}
+        pagination={{
+          ...tableParams.pagination,
+          showSizeChanger: true,
+        }}
+        onChange={handleTableChange}
         scroll={{ y: 500 }}
-        key={data?.products?.id}
       />
     </div>
   );

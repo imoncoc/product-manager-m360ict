@@ -1,10 +1,25 @@
 import { useParams } from "react-router-dom";
-import { useGetProductDetailsQuery } from "../../redux/api/api";
-import { Button, Image, Rate, Modal, Input, Select, Space, Form } from "antd";
+import {
+  useGetProductCategoriesQuery,
+  useGetProductDetailsQuery,
+  useUpdateProductMutation,
+} from "../../redux/api/api";
+import {
+  Button,
+  Image,
+  Rate,
+  Modal,
+  Input,
+  Select,
+  Space,
+  Form,
+  message,
+} from "antd";
 import ProductDetailTabs from "./ProductDetailTabs";
 import { useState } from "react";
-import { TProductUpdate, TProducts } from "./Product.interface";
+import { TCategory, TProductUpdate, TProducts } from "./Product.interface";
 import TextArea from "antd/es/input/TextArea";
+import { calculateDiscountedPrice } from "./Product.utils";
 
 const { Option } = Select;
 
@@ -20,10 +35,12 @@ const tailLayout = {
 const ProductDetails = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetProductDetailsQuery(id);
+  const { data: categoriesData } = useGetProductCategoriesQuery(null);
+  const [updateProduct, { data: successData }] = useUpdateProductMutation();
+  console.log("Final output: ", successData);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-
-  console.log("data: ", data);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -57,31 +74,15 @@ const ProductDetails = () => {
     setIsModalOpen(false);
   };
 
-  // const onGenderChange = (value: string) => {
-  //   switch (value) {
-  //     case "male":
-  //       form.setFieldsValue({ note: "Hi, man!" });
-  //       break;
-  //     case "female":
-  //       form.setFieldsValue({ note: "Hi, lady!" });
-  //       break;
-  //     case "other":
-  //       form.setFieldsValue({ note: "Hi there!" });
-  //       break;
-  //     default:
-  //   }
-  // };
-
   const onFinish = (values: TProductUpdate) => {
-    console.log(values);
-  };
+    const options = {
+      id,
+      data: values,
+    };
 
-  const onReset = () => {
-    form.resetFields();
-  };
-
-  const onFill = () => {
-    form.setFieldsValue({ note: "Hello world!", gender: "male" });
+    updateProduct(options);
+    message.success("Successfully Updated");
+    setIsModalOpen(false);
   };
 
   return (
@@ -92,7 +93,8 @@ const ProductDetails = () => {
         </div>
         <div className="flex-1 text-start border border-red-400 p-5">
           <h2 className="text-3xl">{title}</h2>
-          <p>${price}</p>
+          <p className="line-through">${price}</p>
+          <p>${calculateDiscountedPrice(price, discountPercentage)}</p>
           <p>Category: {category}</p>
           <p>{description}</p>
           <p>
@@ -122,6 +124,7 @@ const ProductDetails = () => {
                   stock,
                   brand,
                   description,
+                  category,
                 }}
                 style={{ maxWidth: 600 }}
               >
@@ -135,7 +138,7 @@ const ProductDetails = () => {
                 <Form.Item
                   name="brand"
                   label="Brand"
-                  rules={[{ required: true, message: "Please input Brand" }]}
+                  rules={[{ required: false, message: "Please input Brand" }]}
                 >
                   <Input />
                 </Form.Item>
@@ -182,11 +185,11 @@ const ProductDetails = () => {
                     },
                   ]}
                 >
-                  <TextArea />
+                  <TextArea style={{ height: 100 }} />
                 </Form.Item>
                 <Form.Item
-                  name="gender"
-                  label="Gender"
+                  name="category"
+                  label="Category"
                   rules={[{ required: true }]}
                 >
                   <Select
@@ -194,9 +197,12 @@ const ProductDetails = () => {
                     // onChange={onGenderChange}
                     allowClear
                   >
-                    <Option value="male">male</Option>
+                    {/* <Option value="male">male</Option>
                     <Option value="female">female</Option>
-                    <Option value="other">other</Option>
+                    <Option value="other">other</Option> */}
+                    {categoriesData?.map((item: TCategory) => (
+                      <Option value={item.slug}>{item.name}</Option>
+                    ))}
                   </Select>
                 </Form.Item>
                 <Form.Item
@@ -221,12 +227,6 @@ const ProductDetails = () => {
                   <Space>
                     <Button type="primary" htmlType="submit">
                       Submit
-                    </Button>
-                    <Button htmlType="button" onClick={onReset}>
-                      Reset
-                    </Button>
-                    <Button type="link" htmlType="button" onClick={onFill}>
-                      Fill form
                     </Button>
                   </Space>
                 </Form.Item>
