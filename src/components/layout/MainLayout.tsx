@@ -18,7 +18,7 @@ const items: MenuProps[] = [
 
 const MainLayout = () => {
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout style={{ minHeight: "10vh" }}>
       <Sider
         breakpoint="lg"
         collapsedWidth="0"

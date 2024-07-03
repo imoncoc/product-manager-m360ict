@@ -5,8 +5,18 @@ import { FieldType, TProducts, TReviews } from "./Product.interface";
 import type { PopconfirmProps } from "antd";
 import type { FormProps } from "antd";
 import { Rate } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
-import { Button, Popconfirm, Tabs, message, Modal, Form, Input } from "antd";
+import {
+  Button,
+  Popconfirm,
+  Tabs,
+  message,
+  Modal,
+  Form,
+  Input,
+  Avatar,
+} from "antd";
 import { formatDate } from "./Product.utils";
 
 type SizeType = ConfigProviderProps["componentSize"];
@@ -19,6 +29,7 @@ const ProductDetailTabs = (data: TProducts) => {
     returnPolicy,
     warrantyInformation,
     reviews,
+    rating,
   } = data;
   const [reviewArray, setReviewArray] = useState<TReviews[]>(reviews);
   const [size, setSize] = useState<SizeType>("middle");
@@ -99,47 +110,61 @@ const ProductDetailTabs = (data: TProducts) => {
 
   return (
     <div className="my-5 flex justify-center">
-      <Tabs defaultActiveKey="1" type="card" size={size}>
+      <Tabs className="" defaultActiveKey="1" type="card" size={size}>
         {items.map((item) => (
           <TabPane tab={item.label} key={item.key}>
             {item.key === "1" && (
-              <div className="border w-[350px] md:w-[600px]">
-                <div className="flex justify-between">
+              <div className=" p-3 w-[350px] md:w-[600px] space-y-3 text-base font-medium text-gray-500">
+                <div className="flex justify-between pb-2 border-b-2 border-blue-200">
                   <p>Depth</p>
                   <p>{dimensions.depth}</p>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between pb-2 border-b-2 border-blue-200">
                   <p>Height</p>
                   <p>{dimensions.height}</p>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between pb-2 border-b-2 border-blue-200">
                   <p>Width</p>
                   <p>{dimensions.width}</p>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between pb-2 border-b-2 border-blue-200">
                   <p>Shipping Info: </p>
                   <p>{shippingInformation}</p>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between pb-2 border-b-2 border-blue-200">
                   <p>Return Policy: </p>
                   <p>{returnPolicy}</p>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between pb-2 border-b-2 border-blue-200">
                   <p>Warranty Info: </p>
                   <p>{warrantyInformation}</p>
                 </div>
               </div>
             )}
             {item.key === "2" && (
-              <div className="w-[350px] md:w-[600px]">
+              <div className="w-[350px] md:w-[600px] ">
                 {reviewArray.map((item) => (
-                  <div>
-                    <p>{item.reviewerName}</p>
-                    <p>{item.reviewerEmail}</p>
-                    {/* <p>{item.date}</p> */}
-                    <p>{formatDate(item.date as string)}</p>
-                    <p>{item.comment}</p>
-                    <p>{item.rating}</p>
+                  <div className="border p-5 mb-5 rounded-md">
+                    <div className="flex gap-5">
+                      <Avatar size={64} icon={<UserOutlined />} />
+
+                      <div>
+                        <p className="text-base font-medium">
+                          {item.reviewerName}
+                        </p>
+                        <p className="text-gray-500">{item.reviewerEmail}</p>
+                        {/* <p>{item.rating}</p> */}
+                        <p>
+                          <Rate allowHalf disabled defaultValue={rating} />
+                        </p>
+                      </div>
+                    </div>
+                    <p className="py-2 text-base text-gray-500">
+                      {item.comment}
+                    </p>
+                    <p className="text-end text-xs text-blue-400">
+                      {formatDate(item.date as string)}
+                    </p>
                     <Popconfirm
                       title="Delete the task"
                       description="Are you sure to delete this task?"
@@ -151,9 +176,11 @@ const ProductDetailTabs = (data: TProducts) => {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <Button type="primary" shape="round" danger>
-                        Delete
-                      </Button>
+                      <div className="flex justify-end my-2">
+                        <Button type="primary" shape="round" danger>
+                          Delete
+                        </Button>
+                      </div>
                     </Popconfirm>
                   </div>
                 ))}
@@ -161,8 +188,8 @@ const ProductDetailTabs = (data: TProducts) => {
                 {/* <Button type="primary">Add a Review</Button>
                  */}
                 <div>
-                  <Button type="primary" onClick={showModal}>
-                    Open Modal
+                  <Button type="primary" onClick={showModal} size="large">
+                    Add a new Review
                   </Button>
                   <Modal
                     title="Add a new review"

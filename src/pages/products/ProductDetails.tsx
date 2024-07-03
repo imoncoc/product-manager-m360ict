@@ -14,6 +14,7 @@ import {
   Space,
   Form,
   message,
+  Tag,
 } from "antd";
 import ProductDetailTabs from "./ProductDetailTabs";
 import { useState } from "react";
@@ -60,6 +61,7 @@ const ProductDetails = () => {
     stock,
     brand,
     rating,
+    images,
   }: TProducts = data;
 
   const showModal = () => {
@@ -87,16 +89,42 @@ const ProductDetails = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:justify-between  w-full">
-        <div className="flex-1 text-center border">
-          <Image src={thumbnail} style={{ width: "100%", height: "auto" }} />
+      <div className="flex flex-col md:flex-row md:justify-between p-10 w-full">
+        <div className="flex-1">
+          <div className=" text-center ">
+            <Image src={thumbnail} style={{ width: "100%", height: "auto" }} />
+          </div>
+          <div className="grid grid-cols-6 gap-2 p-2">
+            {images.map((img) => (
+              <Image
+                className="border"
+                src={img}
+                style={{ width: "100px", height: "120px" }}
+              />
+            ))}
+          </div>
         </div>
-        <div className="flex-1 text-start border border-red-400 p-5">
-          <h2 className="text-3xl">{title}</h2>
-          <p className="line-through">${price}</p>
-          <p>${calculateDiscountedPrice(price, discountPercentage)}</p>
-          <p>Category: {category}</p>
-          <p>{description}</p>
+        <div className="flex-1  space-y-3 text-start  p-10">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl  font-semibold">
+            {title}
+          </h2>
+          <div className="flex gap-3 text-lg">
+            <p className="text-[#1677ff] font-medium">Price: </p>
+            <p className="line-through  text-slate-400">${price}</p>
+            <p className="text-2xl text-[#1677ff]">
+              ${calculateDiscountedPrice(price, discountPercentage)}
+            </p>
+          </div>
+          <p className="">
+            <span className="text-slate-500 text-base mr-1">Category:</span>
+            <Tag className="text-lg" bordered={false} color="processing">
+              {category}
+            </Tag>
+          </p>
+          <p>
+            <span className="text-slate-500 text-base mr-2"> Description:</span>
+            <span className="text-base ">{description}</span>
+          </p>
           <p>
             <Rate allowHalf defaultValue={rating} />
           </p>
@@ -104,10 +132,10 @@ const ProductDetails = () => {
 
           <div>
             <Button type="primary" onClick={showModal}>
-              Open Modal
+              Update Product
             </Button>
             <Modal
-              title="Basic Modal"
+              title="Update Product"
               open={isModalOpen}
               onOk={handleOk}
               onCancel={handleCancel}
