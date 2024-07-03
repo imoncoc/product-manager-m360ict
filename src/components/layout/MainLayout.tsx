@@ -18,7 +18,7 @@ const items: MenuProps[] = [
 
 const MainLayout = () => {
   return (
-    <Layout style={{ minHeight: "10vh" }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
@@ -49,8 +49,8 @@ const MainLayout = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0 }} />
-        <div>
-          <Content style={{ margin: "24px 16px 0" }}>
+        <div className=" h-full">
+          <Content style={{ margin: "24px 16px 0", flex: 1 }}>
             <Outlet />
           </Content>
         </div>

@@ -22,7 +22,6 @@ import { formatDate } from "./Product.utils";
 type SizeType = ConfigProviderProps["componentSize"];
 
 const ProductDetailTabs = (data: TProducts) => {
-  console.log("data tabs", data);
   const {
     dimensions,
     shippingInformation,
@@ -34,31 +33,16 @@ const ProductDetailTabs = (data: TProducts) => {
   const [reviewArray, setReviewArray] = useState<TReviews[]>(reviews);
   const [size, setSize] = useState<SizeType>("middle");
 
-  // const onChange = (e: RadioChangeEvent) => {
-  //   setSize(e.target.value);
-  // };
-
-  //   const items = new Array(3).fill(null).map((_, i) => {
-  //     const id = String(i + 1);
-  //     return {
-  //       label: `Card Tab ${id}`,
-  //       key: id,
-  //       content: `Content of card tab ${id}`,
-  //     };
-  //   });
-
   const items = [
     { label: "Specification", key: "1" },
     { label: "Reviews", key: "2" },
   ];
 
   const createHandleConfirm = (reviewDate: string, reviewerEmail: string) => {
-    return (e) => {
-      console.log("confirm works for review reviewDate:", reviewDate);
-      console.log("confirm works for review reviewerEmail:", reviewerEmail);
-      console.log(e);
+    return () => {
+      // console.log(e);
       message.success("Deleted review successfully!");
-      // Implement the logic to remove the review from the state here
+
       setReviewArray((prev) =>
         prev.filter(
           (review) =>
@@ -88,7 +72,6 @@ const ProductDetailTabs = (data: TProducts) => {
   };
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log("Success:", values);
     const reviewData: TReviews = {
       reviewerName: values.reviewerEmail,
       reviewerEmail: values.reviewerEmail,

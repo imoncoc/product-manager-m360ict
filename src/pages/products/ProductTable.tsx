@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
 import { useGetProductsQuery } from "../../redux/api/api";
 
 import { Button, Table, Tag } from "antd";
@@ -63,9 +64,9 @@ const ProductTable = () => {
   }, [data]);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    const newSkip = (pagination.current - 1) * pagination.pageSize;
+    const newSkip = ((pagination.current as number) - 1) * pagination.pageSize;
     setSkip(newSkip);
-    setLimit(pagination.pageSize);
+    setLimit(pagination.pageSize as number);
 
     setTableParams((prev) => ({
       ...prev,
@@ -90,6 +91,11 @@ const ProductTable = () => {
   };
 
   const columns: TableColumnsType<DataType> = [
+    {
+      title: "No.",
+      dataIndex: "id",
+      width: 80,
+    },
     {
       title: "Image",
       dataIndex: "thumbnail",
@@ -163,7 +169,7 @@ const ProductTable = () => {
           showSizeChanger: true,
         }}
         onChange={handleTableChange}
-        scroll={{ y: 500 }}
+        scroll={{ y: 600 }}
       />
     </div>
   );
